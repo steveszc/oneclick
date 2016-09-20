@@ -81,7 +81,7 @@
                   = translate_helper(:user) + ": "
                 %td.text-left
                   %strong= @contact.name
--if can_manage_provider 
+-if can_manage_provider
   - unless is_ride_hailing
     .row
       - unless is_transit

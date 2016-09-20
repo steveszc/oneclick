@@ -3,112 +3,261 @@
         wrapper: :horizontal_form do |f|
   = f.error_notification message: print_messages(f)
   .row.info-header
-    .col-sm-6
-      %h1
-        = f.input :name
-    .col-sm-6.btns
-      - if can? :update, @provider
-        .pull-right
-          = f.button :submit, translate_helper(:apply), class: "btn action-button"
-          = link_to translate_helper(:cancel), :back, class: "btn action-button"
-
+    .col-sm-12
+      %h1 Transportation Services
+    -#   %h1
+    -#     = f.input :name
+    -# .col-sm-6.btns
+    -#   - if can? :update, @provider
+    -#     .pull-right
+    -#       = f.button :submit, translate_helper(:apply), class: "btn action-button"
+    -#       = link_to translate_helper(:cancel), :back, class: "btn action-button"
   .row
-    .col-sm-6
+    .col-sm-8
       .panel.panel-default
         .panel-heading
           %h4.panel-title
-            = translate_helper(:provider_info)
-            = add_tooltip("provider_info_help")
+            = translate_helper(:provider)
+            -# = add_tooltip("provider_info_help")
         .panel-body
+          = f.input :name, label: translate_helper(:provider_name)
           -unless @provider.logo_url.nil?
             %img{src: @provider.logo_url, style: "display: block; margin-right: auto; margin-left: auto;"}
             = f.input :remove_logo, label: translate_helper(:remove_logo), :as => :boolean, input_html: {checked: false}
           = f.input :logo, label: translate_helper(:upload_logo) + ' (' + Oneclick::Application.config.provider_logo_format_list.join(',') + ')', :as => :file
-          = f.input :address
-          = f.input :city, label: "#{translate_helper(:city)}/#{translate_helper(:state)}/#{translate_helper(:zip)}",
-            input_html: {class: "col-sm-6 form-control"}, wrapper_html: {class: ""} do
-            = f.input_field :city, class: "col-sm-3"
-            %label.col-sm-1
-            = f.input_field :state, class: "col-sm-2"
-            = f.input_field :zip, class: "col-sm-3 pull-right"
-          = f.input :phone
-          = f.input :email
-          = f.input :url
-
-    .col-sm-6
-      .panel.panel-default
-        .panel-heading
-          %h4.panel-title
-            = translate_helper(:internal_contact)
-            = add_tooltip("internal_contact_help")
-        .panel-body
-          = f.input :internal_contact_name
-          = f.input :internal_contact_title
-          = f.input :internal_contact_phone
-          = f.input :internal_contact_email
-          = f.input :internal_contact, collection: @provider.users, class: "form-control",
-                selected: (@contact.id if @contact) , include_blank: "None", label: translate_helper(:user)
-
-  .row
-    .col-sm-12
-      .panel.panel-default
-        .panel-heading
-          %h4.panel-title
-            = translate_helper(:staff_actions)
-            = add_tooltip("staff_actions_help")
-        .panel-body
-          %input{:name => "provider[staff_ids]", :type => 'hidden'}
-          .row
+          .pull-right
+            %button.btn.btn-link#more-provider-details-btn{data: {toggle: 'collapse', target: '#provider-details'}, type: 'button'}
+              Add more provider details
+          .row.collapse#provider-details
             .col-sm-12
-              %button#add_staff_btn.btn.action-button.pull-right{data: {toggle: 'modal', target: '#add_staff'}}
-                = translate_helper(:add)
-              %table.table.table.condensed.table-striped.table-hover.table-bordered#staffs_table
-                %thead
-                  %th= translate_helper(:id)
-                  %th= translate_helper(:name)
-                  %th= translate_helper(:title)
-                  %th= translate_helper(:phone)
-                  %th.email= translate_helper(:email)
-                  %th
-                %tbody
-                  -# initial load from user record
-                  - unless @staff.nil?
-                    - @staff.each do |s|
-                      %tr
-                        %td= s.id.to_s
-                        %td= s.name.to_s
-                        %td= s.title.to_s
-                        %td= s.phone.to_s
-                        %td= mail_to s.email.to_s
-                        %td
-                          %button.btn.btn-sm.btn-danger.delete-button
-                            %i.fa.fa-times
-              #add_staff.modal.fade{:role => "dialog", "aria-hidden" => 'true', :tabindex => "-1"}
-                .modal-dialog.modal-lg
-                  .modal-content
-                    .modal-header
-                      .row
-                        .col-sm-12
-                          .pull-right
-                            %button.btn.action-button#search
-                              = translate_helper(:apply)
-                            %button.btn.action-button{data: {dismiss: 'modal'}}
-                              = translate_helper(:cancel)
-                    .modal-body
-                      .modal-flash
-                      .panel.panel-default
-                        .panel-heading
-                          %h2.panel-title
-                            = translate_helper(:find_staff)
-                            = add_tooltip("find_staff_help")
-                        .panel-body
-                          .row
-                            .col-sm-12
-                              = label_tag :email, translate_helper(:email)
-                              = text_field_tag :email,nil
+              .panel.panel-default
+                .panel-heading
+                  %h4.panel-title
+                    = translate_helper(:provider_info)
+                    = add_tooltip("provider_info_help")
+                .panel-body
+                  -unless @provider.logo_url.nil?
+                    %img{src: @provider.logo_url, style: "display: block; margin-right: auto; margin-left: auto;"}
+                    = f.input :remove_logo, label: translate_helper(:remove_logo), :as => :boolean, input_html: {checked: false}
+                  = f.input :logo, label: translate_helper(:upload_logo) + ' (' + Oneclick::Application.config.provider_logo_format_list.join(',') + ')', :as => :file
+                  = f.input :address
+                  = f.input :city, label: "#{translate_helper(:city)}/#{translate_helper(:state)}/#{translate_helper(:zip)}",
+                    input_html: {class: "col-sm-6 form-control"}, wrapper_html: {class: ""} do
+                    = f.input_field :city, class: "col-sm-3"
+                    %label.col-sm-1
+                    = f.input_field :state, class: "col-sm-2"
+                    = f.input_field :zip, class: "col-sm-3 pull-right"
+                  = f.input :phone
+                  = f.input :email
+                  = f.input :url
+
+            .col-sm-12
+              .panel.panel-default
+                .panel-heading
+                  %h4.panel-title
+                    = translate_helper(:internal_contact)
+                    = add_tooltip("internal_contact_help")
+                .panel-body
+                  = f.input :internal_contact_name
+                  = f.input :internal_contact_title
+                  = f.input :internal_contact_phone
+                  = f.input :internal_contact_email
+                  = f.input :internal_contact, collection: @provider.users, class: "form-control",
+                        selected: (@contact.id if @contact) , include_blank: "None", label: translate_helper(:user)
+
+            .col-sm-12
+              .panel.panel-default
+                .panel-heading
+                  %h4.panel-title
+                    = translate_helper(:staff_actions)
+                    = add_tooltip("staff_actions_help")
+                .panel-body
+                  %input{:name => "provider[staff_ids]", :type => 'hidden'}
+                  .row
+                    .col-sm-12
+                      %button#add_staff_btn.btn.action-button.pull-right{data: {toggle: 'modal', target: '#add_staff'}}
+                        = translate_helper(:add)
+                      %table.table.table.condensed.table-striped.table-hover.table-bordered#staffs_table
+                        %thead
+                          %th= translate_helper(:id)
+                          %th= translate_helper(:name)
+                          %th= translate_helper(:title)
+                          %th= translate_helper(:phone)
+                          %th.email= translate_helper(:email)
+                          %th
+                        %tbody
+                          -# initial load from user record
+                          - unless @staff.nil?
+                            - @staff.each do |s|
+                              %tr
+                                %td= s.id.to_s
+                                %td= s.name.to_s
+                                %td= s.title.to_s
+                                %td= s.phone.to_s
+                                %td= mail_to s.email.to_s
+                                %td
+                                  %button.btn.btn-sm.btn-danger.delete-button
+                                    %i.fa.fa-times
+                      #add_staff.modal.fade{:role => "dialog", "aria-hidden" => 'true', :tabindex => "-1"}
+                        .modal-dialog.modal-lg
+                          .modal-content
+                            .modal-header
+                              .row
+                                .col-sm-12
+                                  .pull-right
+                                    %button.btn.action-button#search
+                                      = translate_helper(:apply)
+                                    %button.btn.action-button{data: {dismiss: 'modal'}}
+                                      = translate_helper(:cancel)
+                            .modal-body
+                              .modal-flash
+                              .panel.panel-default
+                                .panel-heading
+                                  %h2.panel-title
+                                    = translate_helper(:find_staff)
+                                    = add_tooltip("find_staff_help")
+                                .panel-body
+                                  .row
+                                    .col-sm-12
+                                      = label_tag :email, translate_helper(:email)
+                                      = text_field_tag :email,nil
+
+
+          -# = f.input :address
+          -# = f.input :city, label: "#{translate_helper(:city)}/#{translate_helper(:state)}/#{translate_helper(:zip)}",
+          -#   input_html: {class: "col-sm-6 form-control"}, wrapper_html: {class: ""} do
+          -#   = f.input_field :city, class: "col-sm-3"
+          -#   %label.col-sm-1
+          -#   = f.input_field :state, class: "col-sm-2"
+          -#   = f.input_field :zip, class: "col-sm-3 pull-right"
+          -# = f.input :phone
+          -# = f.input :email
+          -# = f.input :url
+
+
+
 
 
   = render partial: 'admin/shared/edit_comments', locals: {f: f, commentable: @provider}
+
+
+
+
+
+-# ORIGINAL CODE
+
+-# - content_for :title, "#{translate_helper(:site_title)} - " + (current_page?(action: 'new') ? "#{translate_helper(:new_provider)}" : "#{translate_helper(:edit)} #{@provider.name}")
+-# = simple_form_for [:admin, @provider], html: { class: 'form-horizontal', multipart: true},
+-#         wrapper: :horizontal_form do |f|
+-#   = f.error_notification message: print_messages(f)
+-#   .row.info-header
+-#     .col-sm-6
+-#       %h1
+-#         = f.input :name
+-#     .col-sm-6.btns
+-#       - if can? :update, @provider
+-#         .pull-right
+-#           = f.button :submit, translate_helper(:apply), class: "btn action-button"
+-#           = link_to translate_helper(:cancel), :back, class: "btn action-button"
+-#
+-#   .row
+-#     .col-sm-6
+-#       .panel.panel-default
+-#         .panel-heading
+-#           %h4.panel-title
+-#             = translate_helper(:provider_info)
+-#             = add_tooltip("provider_info_help")
+-#         .panel-body
+-#           -unless @provider.logo_url.nil?
+-#             %img{src: @provider.logo_url, style: "display: block; margin-right: auto; margin-left: auto;"}
+-#             = f.input :remove_logo, label: translate_helper(:remove_logo), :as => :boolean, input_html: {checked: false}
+-#           = f.input :logo, label: translate_helper(:upload_logo) + ' (' + Oneclick::Application.config.provider_logo_format_list.join(',') + ')', :as => :file
+-#           = f.input :address
+-#           = f.input :city, label: "#{translate_helper(:city)}/#{translate_helper(:state)}/#{translate_helper(:zip)}",
+-#             input_html: {class: "col-sm-6 form-control"}, wrapper_html: {class: ""} do
+-#             = f.input_field :city, class: "col-sm-3"
+-#             %label.col-sm-1
+-#             = f.input_field :state, class: "col-sm-2"
+-#             = f.input_field :zip, class: "col-sm-3 pull-right"
+-#           = f.input :phone
+-#           = f.input :email
+-#           = f.input :url
+-#
+-#     .col-sm-6
+-#       .panel.panel-default
+-#         .panel-heading
+-#           %h4.panel-title
+-#             = translate_helper(:internal_contact)
+-#             = add_tooltip("internal_contact_help")
+-#         .panel-body
+-#           = f.input :internal_contact_name
+-#           = f.input :internal_contact_title
+-#           = f.input :internal_contact_phone
+-#           = f.input :internal_contact_email
+-#           = f.input :internal_contact, collection: @provider.users, class: "form-control",
+-#                 selected: (@contact.id if @contact) , include_blank: "None", label: translate_helper(:user)
+-#
+-#   .row
+-#     .col-sm-12
+-#       .panel.panel-default
+-#         .panel-heading
+-#           %h4.panel-title
+-#             = translate_helper(:staff_actions)
+-#             = add_tooltip("staff_actions_help")
+-#         .panel-body
+-#           %input{:name => "provider[staff_ids]", :type => 'hidden'}
+-#           .row
+-#             .col-sm-12
+-#               %button#add_staff_btn.btn.action-button.pull-right{data: {toggle: 'modal', target: '#add_staff'}}
+-#                 = translate_helper(:add)
+-#               %table.table.table.condensed.table-striped.table-hover.table-bordered#staffs_table
+-#                 %thead
+-#                   %th= translate_helper(:id)
+-#                   %th= translate_helper(:name)
+-#                   %th= translate_helper(:title)
+-#                   %th= translate_helper(:phone)
+-#                   %th.email= translate_helper(:email)
+-#                   %th
+-#                 %tbody
+-#                   -# initial load from user record
+-#                   - unless @staff.nil?
+-#                     - @staff.each do |s|
+-#                       %tr
+-#                         %td= s.id.to_s
+-#                         %td= s.name.to_s
+-#                         %td= s.title.to_s
+-#                         %td= s.phone.to_s
+-#                         %td= mail_to s.email.to_s
+-#                         %td
+-#                           %button.btn.btn-sm.btn-danger.delete-button
+-#                             %i.fa.fa-times
+-#               #add_staff.modal.fade{:role => "dialog", "aria-hidden" => 'true', :tabindex => "-1"}
+-#                 .modal-dialog.modal-lg
+-#                   .modal-content
+-#                     .modal-header
+-#                       .row
+-#                         .col-sm-12
+-#                           .pull-right
+-#                             %button.btn.action-button#search
+-#                               = translate_helper(:apply)
+-#                             %button.btn.action-button{data: {dismiss: 'modal'}}
+-#                               = translate_helper(:cancel)
+-#                     .modal-body
+-#                       .modal-flash
+-#                       .panel.panel-default
+-#                         .panel-heading
+-#                           %h2.panel-title
+-#                             = translate_helper(:find_staff)
+-#                             = add_tooltip("find_staff_help")
+-#                         .panel-body
+-#                           .row
+-#                             .col-sm-12
+-#                               = label_tag :email, translate_helper(:email)
+-#                               = text_field_tag :email,nil
+-#
+-#
+-#   = render partial: 'admin/shared/edit_comments', locals: {f: f, commentable: @provider}
+
 
 :javascript
   $(document).ready(function() {

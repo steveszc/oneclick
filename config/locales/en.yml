@@ -1202,3 +1202,5 @@ en:
         retype_your_password: 'Retype your password'
         remember_me: 'Remember me'
 
+  # TEST Translations
+  wahoo: 'WAHOO!'
